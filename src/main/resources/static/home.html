@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>home</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/ajax_home.js"></script>
+    <script src="js/ajax_user.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-2" style="text-align: center; margin-top: 50px">
+            <h2>目录</h2>
+        </div>
+        <div class="col-xs-3" style="text-align: left; margin-top: 50px">
+            <span>LoginUser:</span>
+            <span id="login-user">xxxxx</span>
+            <span><a href="#" onclick="logout()">logout</a></span>
+        </div>
+        <div class="col-xs-3" style="text-align: left; margin-top: 50px">
+        </div>
+        <div class="col-xs-4" style="text-align: left; margin-top: 50px">
+            <div class="input-group">
+                <span class="input-group-btn">
+                        <button class="btn btn-success" type="button" onclick="javascript:btnSearch()">搜索</button>
+                    </span>
+                <input id="search-value" type="text" class="form-control" placeholder="请输入文件名">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-2">
+            <ul id="dir-list" class="nav nav-pills nav-stacked">
+                <li id='dir-all' class="active"><a href="#" onclick="getDirLogList()">All</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-10">
+            <div>
+                <table class="table table-bordered">
+                    <tr class="danger">
+                        <th>id</th>
+                        <th>文件夹</th>
+                        <th>日志文件</th>
+                        <th>创建时间</th>
+                        <th>修改时间</th>
+                        <th>操作</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-6">
+    </div>
+    <div class="col-xs-6">
+        <div>
+            <ul class="pagination">
+                <li></li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var userId = getQueryString('id');
+        // window.console.log(userId);
+        // 拉取log列表
+        getLogList(userId, null, null, 1, 10, true);
+        // 拉取目录列表
+        getDirList(userId);
+        // 显示登陆用户
+        var userInfo = JSON.parse(window.sessionStorage.getItem("userInfo"));
+        $("#login-user").text(userInfo.username);
+    });
+</script>
+<style>
+    body {
+        background-color: bisque;
+    }
+</style>
+</html>

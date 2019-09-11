@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!--<link th:href="@{/css/1.css}" rel="stylesheet"/>-->
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<p th:text="'Hello, ' + ${title}"/><br/>
+
+<!--<script th:src="@{/js/jquery/1.11.0/jquery.js}"></script>-->
+<script>
+    $(function () {
+        var sock = new SockJS('websocket?'+'token=eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxMjM0NTYiLCJzdWIiOiJ7XCJuaWNrbmFtZVwiOlwidGluZ2ZlbmdcIixcIndlY2hhdFwiOlwiYnVsaW5nYnVsaW5nXCIsXCJxcVwiOlwiMTA1Njg1NjE5MVwifSIsInVzZXJfbmFtZSI6ImFkbWluIiwibmlja19uYW1lIjoiWC1yYXBpZG8iLCJpc3MiOiJBbnNvbiIsImV4cCI6MTUyMjMxNDEyNCwiaWF0IjoxNTIyMzEwNTI0LCJqdGkiOiJhNGQ5MjA0Zi1kYjM3LTRhZGYtODE0NS1iZGNmMDAzMzFmZjYifQ.B5wdY3_W4MZLj9uBHSYalG6vmYwdpdTXg0otdwTmU4U');  //连接节点
+        var stomp = Stomp.over(sock);
+        stomp.connect({}, function (frame) {  //连接成功后订阅消息接口
+            // 订阅个人消息
+            stomp.subscribe('/user/queue/msg/new', function (response) {
+                console.log("*******start receive personal subscribe message********");
+                // var result = response.body;
+                // window.console.log(result);
+                console.log("*******end receive personal subscribe message********")
+                //TODO something
+            });
+            // 客户端消息发送结果(回执)
+            stomp.subscribe('/user/queue/msg/result', function (response) {
+                console.log("*******start receive personal subscribe receipt********");
+                // var result = response.body;
+                // window.console.log(result);
+                console.log("*******end receive personal subscribe receipt********");
+            });
+
+            //订阅广播消息
+            stomp.subscribe('/topic/broadcast', function (response) {
+                console.log("*******start receive broadcast subscribe message********");
+                // var result = response.body;
+                // window.console.log(result);
+                console.log("*******end receive broadcast subscribe message********");
+            });
+        });
+        setTimeout(function(){
+            //发送广播
+            stomp.send('/app/addBroadcast', {}, 2);
+            // 发送消息
+            var msg = {
+                toName: '接收人',
+                content: '消息内容'
+            };
+            stomp.send('/app/msg', {}, JSON.stringify(msg));
+            }, 1000);
+    });
+</script>
+</body>
+</html>
